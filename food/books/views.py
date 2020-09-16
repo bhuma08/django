@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from .models import Books, Authors
+from django.contrib.auth.decorators import login_required
 
 # books =[
     
@@ -11,12 +12,16 @@ from .models import Books, Authors
 # ]
 
 # Create your views here.
+@login_required
 def index(request):
     context = {'books': Books.objects.all()}
     return render(request, 'books/index.html', context)
+
+@login_required
 def show(request, book_id):
     context = {'book' : Books.objects.get(pk=book_id)}
     return render(request, 'books/show.html', context)
+
 def error404(request): 
     return HttpResponse('Sorry, that page doesnt exist!')
    
