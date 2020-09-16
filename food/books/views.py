@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from .models import Books, Authors
 from django.contrib.auth.decorators import login_required
+from .forms import NewBookForm
 
 # books =[
     
@@ -12,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 # ]
 
 # Create your views here.
-@login_required
+
 def index(request):
     context = {'books': Books.objects.all()}
     return render(request, 'books/index.html', context)
@@ -24,5 +25,15 @@ def show(request, book_id):
 
 def error404(request): 
     return HttpResponse('Sorry, that page doesnt exist!')
-   
-        
+
+@login_required
+def create(request):
+    if request.method == 'POST':
+        Books = NewBookForm(request.POST)
+        if Books.is_valid():
+            book_id = Books.save().id
+            return HttpResponseRedirect(f'/books/{book_id}')
+    else:
+        form = NewBookForm()
+    data = {'form': form}        
+    return render(request, 'books/new.html', data)

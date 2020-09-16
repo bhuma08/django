@@ -5,4 +5,5 @@ from . import views
 urlpatterns = [
     path('', views.index, name='book-index'),
     path('<int:book_id>', views.show, name='show-book'),
+    path('new/', views.create, name='book-create')
 ]
